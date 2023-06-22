@@ -26,7 +26,12 @@ func showToast() {
 
 ### Direction
 BottomToTop
-<img src="https://github.com/Guboneui/Toast/assets/73548875/74aa1b79-ba78-49f1-840c-51e437e7cca8">
+<p align="center">
+  <img src="![bt](https://github.com/Guboneui/Toast/assets/73548875/93d82141-283c-46f3-8402-3faad815ddf6)">
+</p>
 
 TopToBottom
-<img src="https://github.com/Guboneui/Toast/assets/73548875/90f76be0-67c0-4200-8075-f9feba5a8925">
+<p align="center">
+  <img src="![tb](https://github.com/Guboneui/Toast/assets/73548875/60441333-1efa-4e1e-8a14-a1228486adf3)">
+</p>
+
