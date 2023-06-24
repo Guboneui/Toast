@@ -26,7 +26,7 @@ class ViewController: UIViewController {
   private lazy var tableView: UITableView = {
     let tableView = UITableView()
     tableView.translatesAutoresizingMaskIntoConstraints = false
-    tableView.backgroundColor = .blue
+    tableView.backgroundColor = .white
     tableView.delegate = self
     tableView.dataSource = self
     tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -35,6 +35,8 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = .white
+    self.title = "TOAST"
     self.setupViews()
   }
   
@@ -68,7 +70,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+    let type: ToastCategory = toastCategory[indexPath.row]
+    let vc = SampleViewController(type: type)
+    self.navigationController?.pushViewController(vc, animated: true)
   }
 }
 
