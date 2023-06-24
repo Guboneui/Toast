@@ -193,6 +193,7 @@ public class ToastManager {
           .horizontally(layout.toastHorizontalMargin)
       }
     } completion: { [weak self] _ in
+      toastView.animation.completion?()
       toastView.removeFromSuperview()
       self?.removeGestures()
       self?.toastBaseView = nil
