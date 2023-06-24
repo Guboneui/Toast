@@ -59,6 +59,7 @@ func showToast() {
   let toastDesign: ToastDesign = ToastDesign(
     bgColor: .green.withAlphaComponent(0.8),
     textColor: .blue,
+    textAlignment: .center,
     textFont: UIFont.systemFont(ofSize: 24, weight: .bold),
     cornerRadius: 0
   )
@@ -70,7 +71,7 @@ func showToast() {
 }
 ```
 <p align="left">
-  <img src="https://github.com/Guboneui/Toast/assets/73548875/e0d5631e-1318-46d8-8fad-47c142abf96e" width=200>
+  <img src="https://github.com/Guboneui/Toast/assets/73548875/076f246a-0ac5-4391-b0af-4d57e4b71e4b" width=200>
 </p>
 
 ---
