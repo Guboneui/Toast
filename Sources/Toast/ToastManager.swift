@@ -19,27 +19,28 @@ public class ToastManager {
     layout: ToastLayout = ToastLayout(),
     animation: ToastAnimation = ToastAnimation(),
     direction: ToastDirection = .BottomToTop,
-    isAutoHidden: Bool = true
+    addHideGesture: Bool = false
   ) {
     toastBaseView = ToastView(design: design, layout: layout, animation: animation, direction: direction)
-    
     
     if let windowScene = windowScene,
        let window = windowScene.windows.first,
        let toastBaseView {
-        addGestureRecognizers(at: toastBaseView)
-        window.addSubview(toastBaseView)
-        toastBaseView.alpha = 0.0
-        switch direction {
-        case .BottomToTop:
-          toastBaseView.pin
-            .bottom(window.pin.safeArea)
-            .horizontally(toastBaseView.layout.toastHorizontalMargin)
-        case .TopToBottom:
-          toastBaseView.pin
-            .top(window.pin.safeArea)
-            .horizontally(toastBaseView.layout.toastHorizontalMargin)
-        }
+      
+      if addHideGesture { addGestureRecognizers(at: toastBaseView) }
+      if animation.addAlphaEffect { toastBaseView.alpha = 0.0 }
+      
+      window.addSubview(toastBaseView)
+      switch direction {
+      case .BottomToTop:
+        toastBaseView.pin
+          .bottom(window.pin.safeArea)
+          .horizontally(toastBaseView.layout.toastHorizontalMargin)
+      case .TopToBottom:
+        toastBaseView.pin
+          .top(window.pin.safeArea)
+          .horizontally(toastBaseView.layout.toastHorizontalMargin)
+      }
       
       if let toastImage = image {
         makeToastContents(
@@ -139,7 +140,7 @@ public class ToastManager {
         delay: 0.0,
         options: animation.showAnimation
       ) {
-        toastView.alpha = 1.0
+        if animation.addAlphaEffect { toastView.alpha = 1.0 }
         
         switch direction {
         case .BottomToTop:
@@ -180,7 +181,7 @@ public class ToastManager {
       delay: 0.0,
       options: animation.hideAnimation
     ) {
-      toastView.alpha = 0.0
+      if animation.addAlphaEffect { toastView.alpha = 0.0 }
       
       switch direction {
       case .BottomToTop:
@@ -203,18 +204,15 @@ public class ToastManager {
 
 extension ToastManager {
   private func addGestureRecognizers(at toastView: ToastView) {
-    // Add Tap Gesture Recognizer
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
     toastView.addGestureRecognizer(tapGesture)
     
-    // Add Swipe Gesture Recognizer
     let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
     swipeGesture.direction = .up // You can change the direction as per your requirement
     toastView.addGestureRecognizer(swipeGesture)
   }
   
   @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-    // Handle tap gesture here
     if gesture.state == .ended {
       if let windowScene,
          let window = windowScene.windows.first,
@@ -231,9 +229,7 @@ extension ToastManager {
   }
   
   @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
-    // Handle swipe gesture here
     if gesture.state == .ended {
-      // Perform your desired action
       if let windowScene,
          let window = windowScene.windows.first,
          let toastBaseView {
@@ -258,7 +254,5 @@ extension ToastManager {
        let swipeGesture = toastBaseView.gestureRecognizers?.first(where: { $0 is UISwipeGestureRecognizer }) {
       toastBaseView.removeGestureRecognizer(swipeGesture)
     }
-            
-            
   }
 }
