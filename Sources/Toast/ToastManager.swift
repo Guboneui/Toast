@@ -77,6 +77,7 @@ public class ToastManager {
       label.font = toastView.design.textFont
       label.textColor = toastView.design.textColor
       label.numberOfLines = 0
+      label.textAlignment = toastView.design.textAlignment
       label.lineBreakMode = .byCharWrapping
       return label
     }()

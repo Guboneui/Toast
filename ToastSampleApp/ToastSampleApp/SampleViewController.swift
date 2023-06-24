@@ -21,11 +21,11 @@ class SampleViewController: UIViewController {
   
   private let customLayout: ToastLayout = ToastLayout(
     imageSize: CGSize(width: 40, height: 40),
-    imageLabelOffset: 0,
-    toastOffset: 120,
-    toastHorizontalMargin: 40.0,
-    contentsHorizontalMargin: 0.0,
-    contentsVerticalMargin: 0.0
+        imageLabelOffset: 0,
+        toastOffset: 24,
+        toastHorizontalMargin: 40.0,
+        contentsHorizontalMargin: 0.0,
+        contentsVerticalMargin: 0.0
   )
   
   private lazy var customAnimation: ToastAnimation = ToastAnimation(
