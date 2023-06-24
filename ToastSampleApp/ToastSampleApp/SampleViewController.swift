@@ -15,6 +15,7 @@ class SampleViewController: UIViewController {
   private let customDesign: ToastDesign = ToastDesign(
     bgColor: .green.withAlphaComponent(0.8),
     textColor: .blue,
+    textAlignment: .center,
     textFont: UIFont.systemFont(ofSize: 24, weight: .bold),
     cornerRadius: 0
   )
