@@ -22,6 +22,7 @@ public class ToastManager {
     isAutoHidden: Bool = true
   ) {
     toastBaseView = ToastView(design: design, layout: layout, animation: animation, direction: direction)
+    toastBaseView.alpha = 0.0
     
     if let windowScene = windowScene,
        let window = windowScene.windows.first,
