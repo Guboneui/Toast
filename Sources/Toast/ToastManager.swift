@@ -90,7 +90,6 @@ public class ToastManager {
         toastView.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -horizontalMargin)
       ])
     }
-    
     window.bringSubviewToFront(toastView)
   }
   
@@ -152,24 +151,36 @@ public class ToastManager {
     let imageLabelOffset: CGFloat = toastView.layout.imageLabelOffset
     let imageSize: CGSize = toastView.layout.imageSize ?? .zero
     
-    
     toastView.addSubview(toastImage)
     toastView.addSubview(toastLabel)
     
     NSLayoutConstraint.activate([
-      toastImage.topAnchor.constraint(equalTo: toastView.topAnchor, constant: verticalMargin),
       toastImage.leadingAnchor.constraint(equalTo: toastView.leadingAnchor, constant: horizontalMargin),
+      toastImage.centerYAnchor.constraint(equalTo: toastView.centerYAnchor),
       toastImage.widthAnchor.constraint(equalToConstant: imageSize.width),
       toastImage.heightAnchor.constraint(equalToConstant: imageSize.height),
       
       toastLabel.centerYAnchor.constraint(equalTo: toastImage.centerYAnchor),
       toastLabel.leadingAnchor.constraint(equalTo: toastImage.trailingAnchor, constant: imageLabelOffset),
-      toastLabel.trailingAnchor.constraint(equalTo: toastView.trailingAnchor, constant: -horizontalMargin),
-      
-      toastView.topAnchor.constraint(equalTo: toastImage.topAnchor),
-      toastView.bottomAnchor.constraint(equalTo: toastImage.bottomAnchor)
+      toastLabel.trailingAnchor.constraint(equalTo: toastView.trailingAnchor, constant: -horizontalMargin)
     ])
+    
     toastView.layoutIfNeeded()
+    
+    let toastLabelHeight: CGFloat = toastLabel.frame.height
+    let toastImageHeight: CGFloat = toastView.frame.height
+    
+    if toastLabelHeight >= toastImageHeight {
+      NSLayoutConstraint.activate([
+        toastLabel.topAnchor.constraint(equalTo: toastView.topAnchor, constant: verticalMargin),
+        toastLabel.bottomAnchor.constraint(equalTo: toastView.bottomAnchor, constant: -verticalMargin)
+      ])
+    } else {
+      NSLayoutConstraint.activate([
+        toastImage.topAnchor.constraint(equalTo: toastView.topAnchor, constant: verticalMargin),
+        toastImage.bottomAnchor.constraint(equalTo: toastView.bottomAnchor, constant: -verticalMargin)
+      ])
+    }
   }
 }
 
