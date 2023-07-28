@@ -26,12 +26,19 @@ public class ToastView: UIView, ToastInterface {
     self.animation = animation
     self.direction = direction
     super.init(frame: .zero)
+    self.translatesAutoresizingMaskIntoConstraints = false
     self.backgroundColor = design.bgColor
-    self.layer.masksToBounds = true
-    self.layer.cornerRadius = design.cornerRadius
+    self.makeCornerRadius(radius: design.cornerRadius)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+extension UIView {
+  func makeCornerRadius(radius: CGFloat) {
+    self.layer.masksToBounds = true
+    self.layer.cornerRadius = radius
   }
 }
