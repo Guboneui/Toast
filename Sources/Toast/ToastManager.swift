@@ -168,7 +168,7 @@ public class ToastManager {
     toastView.layoutIfNeeded()
     
     let toastLabelHeight: CGFloat = toastLabel.frame.height
-    let toastImageHeight: CGFloat = toastView.frame.height
+    let toastImageHeight: CGFloat = toastImage.frame.height
     
     if toastLabelHeight >= toastImageHeight {
       NSLayoutConstraint.activate([
