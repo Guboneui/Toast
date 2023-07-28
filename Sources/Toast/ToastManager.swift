@@ -1,7 +1,6 @@
 //  ToastManager.swift
 
 import UIKit
-//import PinLayout
 
 public class ToastManager {
   

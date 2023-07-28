@@ -1,6 +1,6 @@
 # iOS Toast Message
 
-iOS에서 'ToastMessage'를 띄우기 위한 라이브러리로, layoutBox의 PinLayout을 기반으로 만들어졌습니다.
+iOS에서 'ToastMessage'를 띄우기 위한 라이브러리로, 별도의 ThirdParty Library 없이 개발되었습니다.
 
 기본값이 정해져있지만, 사용자는 `ToastDesign`, `ToastLayout`, `ToastAnimation`, `ToastDirection`을 기반으로 커스텀 가능합니다.
 또한 이미지를 추가할 수 있습니다.

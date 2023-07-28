@@ -7,7 +7,6 @@
 
 import UIKit
 import Toast
-import PinLayout
 
 class SampleViewController: UIViewController {
   
@@ -48,6 +47,7 @@ class SampleViewController: UIViewController {
   
   private let bottomButton: UIButton = {
     let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
     button.setTitle("Bottom", for: .normal)
     button.backgroundColor = .lightGray
     button.tintColor = .darkText
@@ -56,6 +56,7 @@ class SampleViewController: UIViewController {
   
   private let topButton: UIButton = {
     let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
     button.setTitle("Top", for: .normal)
     button.backgroundColor = .lightGray
     button.tintColor = .darkText
@@ -63,14 +64,13 @@ class SampleViewController: UIViewController {
   }()
   
   private lazy var stackView: UIStackView = {
-    let view = UIStackView(arrangedSubviews: [bottomButton, topButton])
-    view.axis = .horizontal
-    view.distribution = .fillEqually
-    view.spacing = 20
-    return view
+    let stackView = UIStackView(arrangedSubviews: [bottomButton, topButton])
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    stackView.axis = .horizontal
+    stackView.distribution = .fillEqually
+    stackView.spacing = 20
+    return stackView
   }()
-  
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -84,16 +84,16 @@ class SampleViewController: UIViewController {
     self.setupLayouts()
   }
   
-  
   private func setupViews() {
     self.view.addSubview(stackView)
   }
   
   private func setupLayouts() {
-    stackView.pin
-      .vCenter()
-      .horizontally(20)
-      .height(60)
+    NSLayoutConstraint.activate([
+      stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+      stackView.heightAnchor.constraint(equalToConstant: 60)
+    ])
   }
   
   private func setupGestures() {

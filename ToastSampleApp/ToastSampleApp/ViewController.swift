@@ -2,7 +2,6 @@
 //  ToastSampleApp
 
 import UIKit
-import PinLayout
 
 enum ToastCategory: String {
   case DefaultToast = "Default Toast"
@@ -50,10 +49,12 @@ class ViewController: UIViewController {
   }
   
   private func setupLayouts() {
-    tableView.pin
-      .top(view.pin.safeArea)
-      .horizontally()
-      .bottom()
+    NSLayoutConstraint.activate([
+      tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+      tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+      tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+      tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+    ])
   }
 }
 
