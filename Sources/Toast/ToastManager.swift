@@ -1,7 +1,7 @@
 //  ToastManager.swift
 
 import UIKit
-import PinLayout
+//import PinLayout
 
 public class ToastManager {
   
@@ -18,10 +18,16 @@ public class ToastManager {
     design: ToastDesign = ToastDesign(),
     layout: ToastLayout = ToastLayout(),
     animation: ToastAnimation = ToastAnimation(),
-    direction: ToastDirection = .BottomToTop,
+    direction: ToastDirection = .bottomToTop,
     addHideGesture: Bool = false
   ) {
-    toastBaseView = ToastView(design: design, layout: layout, animation: animation, direction: direction)
+    
+    toastBaseView = ToastView(
+      design: design,
+      layout: layout,
+      animation: animation,
+      direction: direction
+    )
     
     if let windowScene = windowScene,
        let window = windowScene.windows.first,
@@ -30,17 +36,12 @@ public class ToastManager {
       if addHideGesture { addGestureRecognizers(at: toastBaseView) }
       if animation.addAlphaEffect { toastBaseView.alpha = 0.0 }
       
-      window.addSubview(toastBaseView)
-      switch direction {
-      case .BottomToTop:
-        toastBaseView.pin
-          .bottom(window.pin.safeArea)
-          .horizontally(toastBaseView.layout.toastHorizontalMargin)
-      case .TopToBottom:
-        toastBaseView.pin
-          .top(window.pin.safeArea)
-          .horizontally(toastBaseView.layout.toastHorizontalMargin)
-      }
+      setupToastLayout(
+        at: window,
+        toastView: toastBaseView,
+        direction: direction,
+        horizontalMargin: toastBaseView.layout.toastHorizontalMargin
+      )
       
       if let toastImage = image {
         makeToastContents(
@@ -55,8 +56,6 @@ public class ToastManager {
         )
       }
       
-      window.bringSubviewToFront(toastBaseView)
-      
       showAnimation(
         at: window,
         with: toastBaseView,
@@ -67,12 +66,41 @@ public class ToastManager {
     }
   }
   
+  private func setupToastLayout(
+    at window: UIWindow,
+    toastView: ToastView,
+    direction: ToastDirection,
+    horizontalMargin: CGFloat
+  ) {
+    
+    window.addSubview(toastView)
+    switch direction {
+    case .bottomToTop:
+      let horizontalMargin: CGFloat = toastView.layout.toastHorizontalMargin
+      NSLayoutConstraint.activate([
+        toastView.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor),
+        toastView.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: horizontalMargin),
+        toastView.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -horizontalMargin)
+      ])
+    case .topToBottom:
+      let horizontalMargin: CGFloat = toastView.layout.toastHorizontalMargin
+      NSLayoutConstraint.activate([
+        toastView.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor),
+        toastView.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: horizontalMargin),
+        toastView.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -horizontalMargin)
+      ])
+    }
+    
+    window.bringSubviewToFront(toastView)
+  }
+  
   private func makeToastContents(
     toastView: ToastView,
     message: String
   ) {
     let toastLabel: UILabel = {
       let label = UILabel()
+      label.translatesAutoresizingMaskIntoConstraints = false
       label.text = message
       label.font = toastView.design.textFont
       label.textColor = toastView.design.textColor
@@ -82,12 +110,17 @@ public class ToastManager {
       return label
     }()
     
-    toastView.addSubview(toastLabel)
-    toastLabel.pin
-      .horizontally(toastView.layout.contentsHorizontalMargin)
-      .sizeToFit(.width)
+    let horizontalMargin: CGFloat = toastView.layout.contentsHorizontalMargin
+    let verticalMargin: CGFloat = toastView.layout.contentsVerticalMargin
     
-    toastView.pin.wrapContent(.vertically, padding: toastView.layout.contentsVerticalMargin)
+    toastView.addSubview(toastLabel)
+    
+    NSLayoutConstraint.activate([
+      toastLabel.topAnchor.constraint(equalTo: toastView.topAnchor, constant: verticalMargin),
+      toastLabel.leadingAnchor.constraint(equalTo: toastView.leadingAnchor, constant: horizontalMargin),
+      toastLabel.trailingAnchor.constraint(equalTo: toastView.trailingAnchor, constant: -horizontalMargin),
+      toastLabel.bottomAnchor.constraint(equalTo: toastView.bottomAnchor, constant: -verticalMargin)
+    ])
   }
   
   private func makeToastContents(
@@ -97,6 +130,7 @@ public class ToastManager {
   ) {
     let toastImage: UIImageView = {
       let imageView = UIImageView()
+      imageView.translatesAutoresizingMaskIntoConstraints = false
       imageView.image = image
       imageView.contentMode = .scaleAspectFit
       return imageView
@@ -104,6 +138,7 @@ public class ToastManager {
     
     let toastLabel: UILabel = {
       let label = UILabel()
+      label.translatesAutoresizingMaskIntoConstraints = false
       label.text = message
       label.font = toastView.design.textFont
       label.textColor = toastView.design.textColor
@@ -112,22 +147,34 @@ public class ToastManager {
       return label
     }()
     
+    let horizontalMargin: CGFloat = toastView.layout.contentsHorizontalMargin
+    let verticalMargin: CGFloat = toastView.layout.contentsVerticalMargin
+    let imageLabelOffset: CGFloat = toastView.layout.imageLabelOffset
+    let imageSize: CGSize = toastView.layout.imageSize ?? .zero
+    
+    
     toastView.addSubview(toastImage)
     toastView.addSubview(toastLabel)
     
-    toastImage.pin
-      .topLeft(toastView.layout.contentsHorizontalMargin)
-      .size(toastView.layout.imageSize ?? .zero)
-    
-    toastLabel.pin
-      .after(of: toastImage, aligned: .center)
-      .right(toastView.layout.contentsHorizontalMargin)
-      .sizeToFit(.width)
-      .marginLeft(toastView.layout.imageLabelOffset)
-    
-    toastView.pin.wrapContent(.vertically, padding: toastView.layout.contentsVerticalMargin)
+    NSLayoutConstraint.activate([
+      toastImage.topAnchor.constraint(equalTo: toastView.topAnchor, constant: verticalMargin),
+      toastImage.leadingAnchor.constraint(equalTo: toastView.leadingAnchor, constant: horizontalMargin),
+      toastImage.widthAnchor.constraint(equalToConstant: imageSize.width),
+      toastImage.heightAnchor.constraint(equalToConstant: imageSize.height),
+      
+      toastLabel.centerYAnchor.constraint(equalTo: toastImage.centerYAnchor),
+      toastLabel.leadingAnchor.constraint(equalTo: toastImage.trailingAnchor, constant: imageLabelOffset),
+      toastLabel.trailingAnchor.constraint(equalTo: toastView.trailingAnchor, constant: -horizontalMargin),
+      
+      toastView.topAnchor.constraint(equalTo: toastImage.topAnchor),
+      toastView.bottomAnchor.constraint(equalTo: toastImage.bottomAnchor)
+    ])
+    toastView.layoutIfNeeded()
   }
-  
+}
+
+// MARK: - Toast Animation
+extension ToastManager {
   private func showAnimation(
     at window: UIWindow,
     with toastView: ToastView,
@@ -144,16 +191,33 @@ public class ToastManager {
         if animation.addAlphaEffect { toastView.alpha = 1.0 }
         
         switch direction {
-        case .BottomToTop:
-          toastView.pin
-            .bottom(window.pin.safeArea)
-            .horizontally(layout.toastHorizontalMargin)
-            .marginBottom(layout.toastOffset)
-        case .TopToBottom:
-          toastView.pin
-            .top(window.pin.safeArea)
-            .horizontally(layout.toastHorizontalMargin)
-            .marginTop(layout.toastOffset)
+        case .bottomToTop:
+          let toastViewBottomConstraint = toastView.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -layout.toastOffset)
+          let toastViewLeadingConstraint = toastView.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: layout.toastHorizontalMargin)
+          let toastViewTrailingConstraint = toastView.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -layout.toastHorizontalMargin)
+          
+          // Activate the constraints
+          NSLayoutConstraint.activate([toastViewBottomConstraint, toastViewLeadingConstraint, toastViewTrailingConstraint])
+          
+          toastViewBottomConstraint.constant = 0
+          toastViewLeadingConstraint.constant = layout.toastHorizontalMargin
+          toastViewTrailingConstraint.constant = -layout.toastHorizontalMargin
+          
+          window.layoutIfNeeded()
+          
+        case .topToBottom:
+          let toastViewTopConstraint = toastView.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor, constant: layout.toastOffset)
+          let toastViewLeadingConstraint = toastView.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: layout.toastHorizontalMargin)
+          let toastViewTrailingConstraint = toastView.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -layout.toastHorizontalMargin)
+          
+          NSLayoutConstraint.activate([toastViewTopConstraint, toastViewLeadingConstraint, toastViewTrailingConstraint])
+          
+          toastViewTopConstraint.constant = layout.toastOffset
+          toastViewLeadingConstraint.constant = layout.toastHorizontalMargin
+          toastViewTrailingConstraint.constant = -layout.toastHorizontalMargin
+          
+          // Tell the Auto Layout to update the layout with the new constraints
+          window.layoutIfNeeded()
         }
       } completion: { _ in
         DispatchQueue.main.asyncAfter(deadline: .now() + animation.waitTime) { [weak self] in
@@ -176,33 +240,35 @@ public class ToastManager {
     animation: ToastAnimation,
     direction: ToastDirection
   ) {
-    
-    UIView.animate(
-      withDuration: animation.hideDuringTime,
-      delay: 0.0,
-      options: animation.hideAnimation
-    ) {
-      if animation.addAlphaEffect { toastView.alpha = 0.0 }
-      
-      switch direction {
-      case .BottomToTop:
-        toastView.pin
-          .bottom(window.pin.safeArea)
-          .horizontally(layout.toastHorizontalMargin)
-      case .TopToBottom:
-        toastView.pin
-          .top(window.pin.safeArea)
-          .horizontally(layout.toastHorizontalMargin)
-      }
-    } completion: { [weak self] _ in
-      toastView.animation.completion?()
-      toastView.removeFromSuperview()
-      self?.removeGestures()
-      self?.toastBaseView = nil
-    }
+//    ThreadChecker.check {
+//      UIView.animate(
+//        withDuration: animation.hideDuringTime,
+//        delay: 0.0,
+//        options: animation.hideAnimation
+//      ) {
+//        if animation.addAlphaEffect { toastView.alpha = 0.0 }
+//
+//        switch direction {
+//        case .bottomToTop:
+//          toastView.pin
+//            .bottom(window.pin.safeArea)
+//            .horizontally(layout.toastHorizontalMargin)
+//        case .topToBottom:
+//          toastView.pin
+//            .top(window.pin.safeArea)
+//            .horizontally(layout.toastHorizontalMargin)
+//        }
+//      } completion: { [weak self] _ in
+//        toastView.animation.completion?()
+//        toastView.removeFromSuperview()
+//        self?.removeGestures()
+//        self?.toastBaseView = nil
+//      }
+//    }
   }
 }
 
+// MARK: - Toast Gestures
 extension ToastManager {
   private func addGestureRecognizers(at toastView: ToastView) {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
