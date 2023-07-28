@@ -15,7 +15,12 @@ public class ToastView: UIView, ToastInterface {
   public var animation: ToastAnimation
   public var direction: ToastDirection
   
-  public init(design: ToastDesign, layout: ToastLayout, animation: ToastAnimation, direction: ToastDirection) {
+  public init(
+    design: ToastDesign,
+    layout: ToastLayout,
+    animation: ToastAnimation,
+    direction: ToastDirection
+  ) {
     self.design = design
     self.layout = layout
     self.animation = animation
