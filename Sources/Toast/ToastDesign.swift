@@ -1,6 +1,5 @@
 //  ToastDesign.swift
 
-
 import UIKit
 
 public struct ToastDesign {
@@ -9,6 +8,7 @@ public struct ToastDesign {
   let textFont: UIFont
   let textAlignment: NSTextAlignment
   let cornerRadius: CGFloat
+  
   public init(
     bgColor: UIColor = UIColor.black,
     textColor: UIColor = UIColor.white,
