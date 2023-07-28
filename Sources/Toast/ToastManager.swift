@@ -192,32 +192,9 @@ extension ToastManager {
         
         switch direction {
         case .bottomToTop:
-          let toastViewBottomConstraint = toastView.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -layout.toastOffset)
-          let toastViewLeadingConstraint = toastView.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: layout.toastHorizontalMargin)
-          let toastViewTrailingConstraint = toastView.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -layout.toastHorizontalMargin)
-          
-          // Activate the constraints
-          NSLayoutConstraint.activate([toastViewBottomConstraint, toastViewLeadingConstraint, toastViewTrailingConstraint])
-          
-          toastViewBottomConstraint.constant = 0
-          toastViewLeadingConstraint.constant = layout.toastHorizontalMargin
-          toastViewTrailingConstraint.constant = -layout.toastHorizontalMargin
-          
-          window.layoutIfNeeded()
-          
+          toastView.transform = CGAffineTransform(translationX: 0, y: -layout.toastOffset)
         case .topToBottom:
-          let toastViewTopConstraint = toastView.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor, constant: layout.toastOffset)
-          let toastViewLeadingConstraint = toastView.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: layout.toastHorizontalMargin)
-          let toastViewTrailingConstraint = toastView.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -layout.toastHorizontalMargin)
-          
-          NSLayoutConstraint.activate([toastViewTopConstraint, toastViewLeadingConstraint, toastViewTrailingConstraint])
-          
-          toastViewTopConstraint.constant = layout.toastOffset
-          toastViewLeadingConstraint.constant = layout.toastHorizontalMargin
-          toastViewTrailingConstraint.constant = -layout.toastHorizontalMargin
-          
-          // Tell the Auto Layout to update the layout with the new constraints
-          window.layoutIfNeeded()
+          toastView.transform = CGAffineTransform(translationX: 0, y: layout.toastOffset)
         }
       } completion: { _ in
         DispatchQueue.main.asyncAfter(deadline: .now() + animation.waitTime) { [weak self] in
@@ -240,31 +217,25 @@ extension ToastManager {
     animation: ToastAnimation,
     direction: ToastDirection
   ) {
-//    ThreadChecker.check {
-//      UIView.animate(
-//        withDuration: animation.hideDuringTime,
-//        delay: 0.0,
-//        options: animation.hideAnimation
-//      ) {
-//        if animation.addAlphaEffect { toastView.alpha = 0.0 }
-//
-//        switch direction {
-//        case .bottomToTop:
-//          toastView.pin
-//            .bottom(window.pin.safeArea)
-//            .horizontally(layout.toastHorizontalMargin)
-//        case .topToBottom:
-//          toastView.pin
-//            .top(window.pin.safeArea)
-//            .horizontally(layout.toastHorizontalMargin)
-//        }
-//      } completion: { [weak self] _ in
-//        toastView.animation.completion?()
-//        toastView.removeFromSuperview()
-//        self?.removeGestures()
-//        self?.toastBaseView = nil
-//      }
-//    }
+    ThreadChecker.check {
+      UIView.animate(
+        withDuration: animation.hideDuringTime,
+        delay: 0.0,
+        options: animation.hideAnimation
+      ) {
+        if animation.addAlphaEffect { toastView.alpha = 0.0 }
+
+        switch direction {
+        case .bottomToTop, .topToBottom:
+          toastView.transform = .identity
+        }
+      } completion: { [weak self] _ in
+        toastView.animation.completion?()
+        toastView.removeFromSuperview()
+        self?.removeGestures()
+        self?.toastBaseView = nil
+      }
+    }
   }
 }
 
