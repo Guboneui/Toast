@@ -1,21 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "pinlayout",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/layoutBox/PinLayout",
-      "state" : {
-        "revision" : "ce929a6ecdc6701adee9bdf9d949e0036f567ca7",
-        "version" : "1.10.4"
-      }
-    },
-    {
       "identity" : "toast",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Guboneui/Toast",
       "state" : {
         "branch" : "main",
-        "revision" : "5fb5e20b87d772ed71d7ff102873b89ec4298979"
+        "revision" : "eb0d96140e31deea795af99bd43363f7650669f4"
       }
     }
   ],
