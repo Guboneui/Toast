@@ -12,13 +12,15 @@ let package = Package(
       name: "Toast",
       targets: ["Toast"]),
   ],
-  dependencies: [],
+  dependencies: [
+    .package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.4")
+  ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.
     // Targets can depend on other targets in this package, and on products in packages this package depends on.
     .target(
       name: "Toast",
-      dependencies: []),
+      dependencies: ["PinLayout"]),
     .testTarget(
       name: "ToastTests",
       dependencies: ["Toast"]),
