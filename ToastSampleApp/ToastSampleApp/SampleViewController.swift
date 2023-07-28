@@ -122,7 +122,7 @@ extension SampleViewController {
       // direction의 기본값은 `BottomToTop`입니다.
       Toast.showToast(
         message: "BottomToTop Default Toast",
-        direction: .BottomToTop
+        direction: .bottomToTop
       )
     case .ToastWithImageView:
       Toast.showToast(
@@ -158,19 +158,19 @@ extension SampleViewController {
     case .DefaultToast:
       Toast.showToast(
         message: "TopToBottom Default Toast",
-        direction: .TopToBottom
+        direction: .topToBottom
       )
     case .ToastWithImageView:
       Toast.showToast(
         message: "Toast With Image",
         image: UIImage(systemName: "heart.fill"),
-        direction: .TopToBottom
+        direction: .topToBottom
       )
     case .CustomDesign:
       Toast.showToast(
         message: "Toast With Custom Design",
         design: customDesign,
-        direction: .TopToBottom
+        direction: .topToBottom
       )
       
     case .CustomLayout:
@@ -178,14 +178,14 @@ extension SampleViewController {
         message: "Toast With Image",
         image: UIImage(systemName: "heart.fill")!,
         layout: customLayout,
-        direction: .TopToBottom
+        direction: .topToBottom
       )
       
     case .CustomAnimation:
       Toast.showToast(
         message: "Toast With Custom Animation",
         animation: customAnimation,
-        direction: .TopToBottom
+        direction: .topToBottom
       )
     }
   }
